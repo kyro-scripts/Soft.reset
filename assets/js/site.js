@@ -209,16 +209,8 @@
   /* ---------- Headline experiment (homepage) ---------- */
 
   var headline = document.getElementById("hero-title");
-  var exp = cfg.experiments && cfg.experiments.homeHeadline;
-  if (headline && exp && exp.variants) {
-    var keys = Object.keys(exp.variants);
-    var stored = null;
-    try { stored = sessionStorage.getItem("sr_homeHeadline"); } catch (e) { stored = null; }
-    var variant = keys.indexOf(stored) !== -1 ? stored : keys[Math.floor(Math.random() * keys.length)];
-    try { sessionStorage.setItem("sr_homeHeadline", variant); } catch (e) { /* storage blocked: still fine */ }
-    headline.textContent = exp.variants[variant];
-    headline.setAttribute("data-variant", variant);
-    SR.track("headline_view", { variant: variant });
+  if (headline && headline.getAttribute("data-variant")) {
+    SR.track("headline_view", { variant: headline.getAttribute("data-variant") });
   }
 
   /* ---------- Products (shop page) ---------- */

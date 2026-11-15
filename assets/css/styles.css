@@ -243,7 +243,7 @@ p {
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  transition: background 0.2s, transform 0.15s var(--ease-out), box-shadow 0.2s;
 }
 
 /* Lift only where a real hover exists. On touch screens a tap would leave the button stuck lifted. */
@@ -271,27 +271,15 @@ p {
   box-shadow: 0 10px 24px -10px rgba(29, 107, 255, 0.7);
 }
 
-.btn-primary:hover {
-  background: var(--blue-dark);
-}
-
 .btn-dark {
   background: var(--navy);
   color: #fff;
-}
-
-.btn-dark:hover {
-  background: var(--navy-soft);
 }
 
 .btn-ghost {
   background: #fff;
   color: var(--navy);
   box-shadow: var(--shadow-md);
-}
-
-.btn-ghost:hover {
-  box-shadow: 0 22px 44px -22px rgba(11, 31, 75, 0.35);
 }
 
 .btn-lg {
@@ -373,10 +361,6 @@ p {
   font-weight: 500;
   font-size: 0.95rem;
   color: var(--navy);
-}
-
-.site-nav > a:not(.btn):hover {
-  background: rgba(29, 107, 255, 0.07);
 }
 
 .site-nav > a.is-active {
@@ -499,11 +483,6 @@ p {
   font-weight: 600;
   font-size: 0.92rem;
   color: var(--navy);
-}
-
-.jump-links a:hover {
-  border-color: #b8ccf5;
-  color: var(--blue);
 }
 
 /* Landing page trust line */
@@ -793,11 +772,6 @@ p {
   color: var(--navy);
 }
 
-.service-name:hover {
-  color: var(--blue);
-  text-decoration: underline;
-}
-
 .service-detail {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
@@ -1028,7 +1002,7 @@ table.compare {
   font-size: 1.5rem;
   line-height: 1;
   color: var(--blue);
-  transition: transform 0.2s;
+  transition: transform 200ms var(--ease-out);
 }
 
 .faq details[open] summary::after {
@@ -1192,6 +1166,19 @@ table.compare {
   gap: 0.75rem;
 }
 
+/* Colour-only hover applies only where a real hover exists. Touch taps would otherwise leave tints stuck. */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-dark:hover { background: var(--navy-soft); }
+  .btn-ghost:hover { box-shadow: 0 22px 44px -22px rgba(11, 31, 75, 0.35); }
+  .site-nav > a:not(.btn):hover { background: rgba(29, 107, 255, 0.07); }
+  .jump-links a:hover { border-color: #b8ccf5; color: var(--blue); }
+  .service-name:hover { color: var(--blue); text-decoration: underline; }
+  .opt:hover { border-color: #b8ccf5; }
+  .chip:hover { border-color: #b8ccf5; }
+  .footer-links a:hover { color: #fff; text-decoration: underline; }
+}
+
 .opt {
   position: relative;
   display: flex;
@@ -1205,11 +1192,7 @@ table.compare {
   border-radius: var(--radius-md);
   padding: 1rem 1.1rem;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
-}
-
-.opt:hover {
-  border-color: #b8ccf5;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 100ms var(--ease-out);
 }
 
 .opt:active {
@@ -1263,11 +1246,7 @@ table.compare {
   border: 2px solid var(--line);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s, transform 0.1s;
-}
-
-.chip:hover {
-  border-color: #b8ccf5;
+  transition: border-color 0.2s, background 0.2s, transform 100ms var(--ease-out);
 }
 
 .chip:active {
@@ -1697,7 +1676,6 @@ table.compare {
   overflow-wrap: anywhere;
 }
 
-.footer-links a:hover,
 .footer-links a:focus-visible {
   color: #fff;
   text-decoration: underline;
@@ -1865,6 +1843,11 @@ table.compare {
   .outcome:not([hidden]),
   .banner.is-success:not([hidden]) {
     animation-name: fade-in;
+  }
+
+  /* The FAQ plus icon changes state without rotating. */
+  .faq summary::after {
+    transition: none;
   }
 
   /* The menu fades without the slide, and opens and closes without the visibility delay. */
