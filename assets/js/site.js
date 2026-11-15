@@ -41,9 +41,8 @@
     el.innerHTML = channels
       .map(function (c) {
         return (
-          '<article class="channel-card reveal">' +
-          '<span class="icon-badge">' + SR.icon(c.icon) + "</span>" +
-          "<h3>" + esc(c.label) + "</h3>" +
+          '<article class="channel-card">' +
+          "<h3>" + '<span class="icon-badge">' + SR.icon(c.icon) + "</span>" + esc(c.label) + "</h3>" +
           '<p class="handle">' + esc(c.handle) + "</p>" +
           '<div class="channel-actions">' +
           '<a class="btn btn-primary" href="' + esc(c.url) + '" target="_blank" rel="noopener" data-track="contact_click" data-channel="' + esc(c.id) + '">Open ' + esc(c.label) + "</a>" +
@@ -64,9 +63,8 @@
     homeServices.innerHTML = cfg.services
       .map(function (s) {
         return (
-          '<li class="service-row reveal">' +
-          '<span class="icon-badge">' + SR.icon(s.icon) + "</span>" +
-          '<div class="service-main"><a class="service-name" href="services.html#' + esc(s.id) + '">' + esc(s.name) + "</a>" +
+          '<li class="service-row">' +
+          '<div><a class="service-name" href="services.html#' + esc(s.id) + '"><span class="icon-badge">' + SR.icon(s.icon) + "</span>" + esc(s.name) + "</a>" +
           '<p class="muted">' + esc(s.problem) + "</p></div>" +
           '<p class="service-price">' + money(s.price) + "</p></li>"
         );
@@ -80,11 +78,10 @@
     serviceSections.innerHTML = cfg.services
       .map(function (s) {
         return (
-          '<section class="service-detail reveal" id="' + esc(s.id) + '" aria-labelledby="h-' + esc(s.id) + '">' +
+          '<section class="service-detail" id="' + esc(s.id) + '" aria-labelledby="h-' + esc(s.id) + '">' +
           '<div class="service-intro">' +
-          '<span class="icon-badge icon-badge--lg">' + SR.icon(s.icon) + "</span>" +
           '<p class="service-price-tag">' + money(s.price) + "</p>" +
-          '<h2 id="h-' + esc(s.id) + '">' + esc(s.name) + "</h2>" +
+          '<h2 id="h-' + esc(s.id) + '"><span class="icon-badge">' + SR.icon(s.icon) + "</span>" + esc(s.name) + "</h2>" +
           '<p class="service-summary">' + esc(s.summary) + "</p>" +
           '<p class="service-problem"><strong>When this helps:</strong> ' + esc(s.problem) + "</p>" +
           '<p class="muted"><strong>Best for:</strong> ' + esc(s.bestFor) + "</p>" +
@@ -110,9 +107,8 @@
     pricingCards.innerHTML = cfg.services
       .map(function (s) {
         return (
-          '<article class="card price-card reveal">' +
-          '<span class="icon-badge">' + SR.icon(s.icon) + "</span>" +
-          "<h3>" + esc(s.name) + "</h3>" +
+          '<article class="card price-card">' +
+          '<h3><span class="icon-badge">' + SR.icon(s.icon) + "</span>" + esc(s.name) + "</h3>" +
           '<p class="price">' + money(s.price) + "</p>" +
           '<p class="muted">' + esc(s.summary) + "</p>" +
           '<p class="price-best"><strong>Best for:</strong> ' + esc(s.bestFor) + "</p>" +
@@ -183,7 +179,7 @@
       .map(function (item) {
         var answer = item.a || (item.policy && cfg.policies && cfg.policies[item.policy]) || "";
         if (!answer) return "";
-        return '<details class="reveal"><summary>' + esc(item.q) + "</summary><p>" + esc(answer) + "</p></details>";
+        return "<details><summary>" + esc(item.q) + "</summary><p>" + esc(answer) + "</p></details>";
       })
       .join("");
   }
@@ -242,7 +238,7 @@
             buy = '<a class="btn btn-ghost" href="contact.html">Ask about this item</a>';
           }
           return (
-            '<article class="card product-card reveal">' +
+            '<article class="card product-card">' +
             '<div class="product-media">' + media + (p.badge ? '<span class="badge">' + esc(p.badge) + "</span>" : "") + "</div>" +
             '<div class="product-body">' +
             '<span class="product-type">' + esc(p.type || "Product") + "</span>" +
@@ -271,35 +267,12 @@
     }
   }
 
-  /* ---------- Static icons and reveal on scroll ---------- */
+  /* ---------- Static icons ---------- */
 
   // Any element with data-icon gets that icon. Icons are decorative, so the words beside them carry the meaning.
   document.querySelectorAll("[data-icon]").forEach(function (el) {
     el.innerHTML = SR.icon(el.getAttribute("data-icon"));
   });
-
-  // Elements marked .reveal fade and rise into place as they reach the screen. Siblings get a
-  // small delay so a list builds up in order. Without JavaScript nothing is hidden.
-  var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
-  revealEls.forEach(function (el) {
-    var siblings = el.parentElement
-      ? Array.prototype.filter.call(el.parentElement.children, function (c) { return c.classList.contains("reveal"); })
-      : [el];
-    el.style.setProperty("--i", String(Math.max(0, siblings.indexOf(el))));
-  });
-  if ("IntersectionObserver" in window) {
-    var revealObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
-    revealEls.forEach(function (el) { revealObserver.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add("is-visible"); });
-  }
 
   /* ---------- Copy buttons and tracking (event delegation) ---------- */
 

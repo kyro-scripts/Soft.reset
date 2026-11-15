@@ -11,10 +11,10 @@
   --blue: #1d6bff;
   --blue-dark: #1556d6;
   --blue-tint: #e8f0ff;
-  --bg: #f7f5f0;
+  --bg: #eef3fd;
   --surface: #ffffff;
-  --muted: #5a6172;
-  --line: #e3ded2;
+  --muted: #56647f;
+  --line: #d9e2f4;
   --success-bg: #e6f7ee;
   --success-ink: #14532d;
   --success-line: #b7e4c7;
@@ -22,10 +22,9 @@
   --danger: #b42318;
   --radius-lg: 24px;
   --radius-md: 16px;
-  --shadow-sm: 0 1px 2px rgba(20, 33, 61, 0.06);
-  --shadow-md: 0 14px 30px -20px rgba(20, 33, 61, 0.28);
+  --shadow-sm: 0 2px 8px -4px rgba(11, 31, 75, 0.12);
+  --shadow-md: 0 18px 40px -20px rgba(11, 31, 75, 0.25);
   --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --display: "Fraunces", Georgia, "Times New Roman", serif;
   /* Motion vocabulary. Ease-out for things entering or responding; ease-in-out for things moving between places. */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -44,7 +43,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 96px;
 }
 
@@ -56,7 +54,9 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   font-optical-sizing: auto;
-  background: var(--bg);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #ffffff 0%, transparent 60%),
+    linear-gradient(180deg, #f4f7fe 0%, var(--bg) 100%);
 }
 
 img,
@@ -83,19 +83,17 @@ h3 {
 }
 
 h1 {
-  font-family: var(--display);
-  font-size: clamp(2.5rem, 5.6vw, 4rem);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
 }
 
 h2 {
-  font-family: var(--display);
-  font-size: clamp(1.75rem, 3.4vw, 2.4rem);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
 }
 
 h3 {
@@ -131,8 +129,9 @@ p {
 }
 
 .section-head {
+  text-align: center;
   max-width: 640px;
-  margin: 0 0 2.25rem;
+  margin: 0 auto 2.5rem;
 }
 
 .section-head p {
@@ -231,14 +230,7 @@ p {
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s var(--ease-out), box-shadow 0.2s;
-}
-
-/* Lift only where a real hover exists. On touch screens a tap would leave the button stuck lifted. */
-@media (hover: hover) and (pointer: fine) {
-  .btn:hover {
-    transform: translateY(-1px);
-  }
+  transition: background 0.2s, transform 0.1s var(--ease-out);
 }
 
 /* Press feedback happens on pointer-down, not on release. */
@@ -256,7 +248,7 @@ p {
 .btn-primary {
   background: var(--blue);
   color: #fff;
-  box-shadow: 0 8px 18px -12px rgba(29, 107, 255, 0.75);
+  box-shadow: 0 10px 24px -10px rgba(29, 107, 255, 0.7);
 }
 
 .btn-dark {
@@ -305,8 +297,11 @@ p {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  background: rgba(255, 255, 255, 0.72);
+  /* A soft edge where the header meets content, instead of a hard line. */
+  box-shadow: 0 12px 24px -22px rgba(11, 31, 75, 0.45);
 }
 
 .nav-wrap {
@@ -400,21 +395,38 @@ p {
 
 .hero {
   position: relative;
-  padding: clamp(3rem, 8vw, 5.5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+  overflow: hidden;
+  padding: clamp(3.5rem, 9vw, 6.5rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 50% at 50% 0%, rgba(29, 107, 255, 0.1), transparent 70%);
+}
+
+.hero-inner {
+  position: relative;
+  max-width: 900px;
+  text-align: center;
 }
 
 .hero h1 {
-  max-width: 14ch;
+  max-width: 16ch;
+  margin-inline: auto;
 }
 
 .hero .lead {
-  margin: 0 0 2rem;
+  margin: 0 auto 2rem;
 }
 
 .hero-ctas {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
 }
 
 .hero-note {
@@ -484,17 +496,18 @@ p {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.9rem;
+  gap: 1rem;
 }
 
 .process-list li {
   display: flex;
   align-items: flex-start;
   gap: 1.1rem;
-  padding: 1.35rem 1.5rem;
+  padding: 1.4rem 1.5rem;
   background: var(--surface);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
+  box-shadow: var(--shadow-sm);
 }
 
 .process-list h3 {
@@ -519,7 +532,7 @@ p {
   border-radius: var(--radius-lg);
   padding: 1.75rem;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
 }
 
 .card > h2 {
@@ -564,7 +577,8 @@ p {
   border-radius: var(--radius-lg);
   padding: clamp(1.5rem, 3vw, 2.25rem);
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
+  border-left: 5px solid var(--blue);
 }
 
 .notice h2 {
@@ -588,8 +602,8 @@ p {
 }
 
 .notice-warn {
-  background: #fffbf2;
-  border-color: #ecd9ae;
+  border-left-color: #b7791f;
+  background: #fffaf0;
 }
 
 .prose .checks li {
@@ -601,11 +615,12 @@ p {
 }
 
 .cta-band {
-  background: var(--navy);
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3a7a 100%);
   color: #fff;
   border-radius: var(--radius-lg);
   padding: clamp(2rem, 5vw, 3.5rem);
   text-align: center;
+  box-shadow: var(--shadow-md);
 }
 
 .cta-band h2 {
@@ -639,18 +654,14 @@ p {
 
 .service-row {
   display: flex;
-  align-items: center;
-  gap: 1.1rem;
-  padding: 1.1rem 1.35rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.2rem 1.4rem;
   background: var(--surface);
   border-radius: var(--radius-md);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
   box-shadow: var(--shadow-sm);
-}
-
-.service-row .service-main {
-  flex: 1;
-  min-width: 0;
 }
 
 .service-row p {
@@ -799,7 +810,7 @@ p {
   overflow-x: auto;
   background: var(--surface);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
   box-shadow: var(--shadow-sm);
 }
 
@@ -840,9 +851,7 @@ table.compare {
 }
 
 .compare .yes {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+  display: inline-block;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
   background: var(--success-bg);
@@ -881,7 +890,7 @@ table.compare {
   padding: 1.1rem 1.4rem;
   margin-bottom: 0.75rem;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
 }
 
 .faq summary {
@@ -929,7 +938,7 @@ table.compare {
   border-radius: var(--radius-lg);
   padding: 1.75rem;
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
 }
 
 .channel-card h3 {
@@ -969,7 +978,7 @@ table.compare {
   padding: 1.75rem;
   background: var(--surface);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
   box-shadow: var(--shadow-sm);
 }
 
@@ -1033,7 +1042,7 @@ table.compare {
   margin: 0;
   padding: 1.5rem;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(217, 226, 244, 0.6);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
 }
@@ -1072,7 +1081,6 @@ table.compare {
 @media (hover: hover) and (pointer: fine) {
   .btn-primary:hover { background: var(--blue-dark); }
   .btn-dark:hover { background: var(--navy-soft); }
-  .btn-ghost:hover { box-shadow: 0 22px 44px -22px rgba(11, 31, 75, 0.35); }
   .site-nav > a:not(.btn):hover { background: rgba(29, 107, 255, 0.07); }
   .jump-links a:hover { border-color: #b8ccf5; color: var(--blue); }
   .service-name:hover { color: var(--blue); text-decoration: underline; }
@@ -1330,14 +1338,7 @@ table.compare {
 /* One-shot entrances for the result panel and the success banner. Not gesture-driven, so a keyframe is fine. */
 .outcome:not([hidden]),
 .banner.is-success:not([hidden]) {
-  animation: enter-up 220ms var(--ease-out) both;
-}
-
-@keyframes enter-up {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
+  animation: fade-in 180ms var(--ease-out) both;
 }
 
 @keyframes fade-in {
@@ -1421,7 +1422,7 @@ table.compare {
   aspect-ratio: 16 / 10;
   display: grid;
   place-items: center;
-  background: var(--blue-tint);
+  background: linear-gradient(135deg, #e8f0ff 0%, #cfdfff 100%);
 }
 
 .product-media img {
@@ -1436,20 +1437,11 @@ table.compare {
   left: 12px;
 }
 
-.product-icon {
-  display: grid;
-  place-items: center;
-  width: 5rem;
-  height: 5rem;
-  border-radius: 22px;
-  background: #fff;
+.product-initial {
+  font-size: 3.5rem;
+  font-weight: 800;
   color: var(--blue);
-  box-shadow: var(--shadow-sm);
-}
-
-.product-icon .icon {
-  width: 2.4rem;
-  height: 2.4rem;
+  opacity: 0.85;
 }
 
 .product-body {
@@ -1726,172 +1718,27 @@ table.compare {
   }
 }
 
-/* ---------- Icons, promises, steps, and reveal on scroll ---------- */
+/* ---------- Icons and home page layout ---------- */
 
+/* Icons sit inline beside their words and are sized to the text around them. */
 .icon {
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 1em;
+  height: 1em;
   flex: none;
 }
 
 .icon-badge {
-  display: inline-grid;
-  place-items: center;
-  flex: none;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 12px;
-  background: var(--blue-tint);
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.35em;
+  vertical-align: -0.125em;
   color: var(--blue);
-  transition: transform 300ms var(--ease-out);
 }
 
 .icon-badge .icon {
-  width: 1.3rem;
-  height: 1.3rem;
-}
-
-.icon-badge--lg {
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 14px;
-  margin-bottom: 1rem;
-}
-
-.icon-badge--lg .icon {
-  width: 1.55rem;
-  height: 1.55rem;
-}
-
-.icon-badge--sm {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 10px;
-}
-
-.icon-badge--sm .icon {
-  width: 1.1rem;
-  height: 1.1rem;
-}
-
-.card > .icon-badge,
-.notice > .icon-badge,
-.price-card > .icon-badge,
-.channel-card > .icon-badge {
-  margin-bottom: 1rem;
-}
-
-/* A small lift on icons when a pointer hovers the card they sit in. Hover devices only. */
-@media (hover: hover) and (pointer: fine) {
-  .card:hover .icon-badge,
-  .price-card:hover .icon-badge,
-  .channel-card:hover .icon-badge,
-  .service-row:hover .icon-badge,
-  .process-list li:hover .icon-badge {
-    transform: translateY(-2px);
-  }
-}
-
-.hero-split {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  align-items: center;
-}
-
-@media (max-width: 860px) {
-  .hero-split {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.promise-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: clamp(1.5rem, 3vw, 2.25rem);
-  box-shadow: var(--shadow-md);
-}
-
-.promise-card h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-
-.promise-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 1.25rem;
-}
-
-.promise-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.promise-list div {
-  display: grid;
-  gap: 0.15rem;
-  padding-top: 0.2rem;
-}
-
-.promise-list strong {
-  color: var(--navy);
-}
-
-.promise-list span:not(.icon-badge) {
-  color: var(--muted);
-  font-size: 0.97rem;
-}
-
-.step-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1rem;
-}
-
-.step-grid li {
-  display: flex;
-  flex-direction: column;
-  padding: 1.6rem;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-}
-
-.step-grid h3 {
-  margin: 0.25rem 0 0.35rem;
-}
-
-.step-grid p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.95rem;
-}
-
-.step-num {
-  margin-top: 1rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.process-list h3 {
-  margin-bottom: 0.3rem;
-}
-
-.section-link {
-  margin: 1.75rem 0 0;
-  text-align: center;
-  color: var(--muted);
+  width: 100%;
+  height: 100%;
 }
 
 .checks-x li::before {
@@ -1908,40 +1755,123 @@ table.compare {
   color: var(--muted);
 }
 
-.compare .no .icon {
-  width: 1.1rem;
-  height: 1.1rem;
-}
-
-.opt {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.85rem;
-}
-
-.opt-main {
-  display: grid;
-  gap: 0.25rem;
-  flex: 1;
-  min-width: 0;
-}
-
-/* Reveal on scroll. Only applies when the page has JavaScript (html.js), so nothing is hidden without it. */
-.js .reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
-  transition-delay: calc(var(--i, 0) * 80ms);
-}
-
-.js .reveal.is-visible {
-  opacity: 1;
-  transform: none;
+.section-link {
+  margin: 1.5rem 0 0;
+  text-align: center;
+  color: var(--muted);
 }
 
 /* Keep hidden text inside the scrolling comparison table, so it cannot widen the page. */
 .table-wrap {
   position: relative;
+}
+
+.product-icon {
+  color: var(--blue);
+}
+
+.product-icon .icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Home hero: copy on the left, promises on the right. */
+.hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.hero-split h1 {
+  max-width: 14ch;
+  margin-inline: 0;
+}
+
+.hero-split .lead {
+  margin: 0 0 2rem;
+}
+
+.hero-split .hero-ctas {
+  justify-content: flex-start;
+}
+
+@media (max-width: 860px) {
+  .hero-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.promise-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  box-shadow: var(--shadow-sm);
+}
+
+.promise-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.promise-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.promise-list div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.promise-list strong {
+  color: var(--navy);
+}
+
+.promise-list span:not(.icon-badge) {
+  color: var(--muted);
+  font-size: 0.97rem;
+}
+
+/* Home steps: four short cards in a row. */
+.step-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+}
+
+.step-grid li {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+}
+
+.step-grid h3 {
+  margin: 0.25rem 0 0.35rem;
+}
+
+.step-grid p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.step-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* ---------- Accessibility preferences ---------- */
@@ -1985,26 +1915,6 @@ table.compare {
     transform: none !important;
     transition-property: opacity, visibility;
     transition-delay: 0s !important;
-  }
-}
-
-/* Reduced motion: content appears at once, and icons stay still. */
-@media (prefers-reduced-motion: reduce) {
-  .js .reveal,
-  .js .reveal.is-visible {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  .icon-badge,
-  .card:hover .icon-badge,
-  .price-card:hover .icon-badge,
-  .channel-card:hover .icon-badge,
-  .service-row:hover .icon-badge,
-  .process-list li:hover .icon-badge {
-    transition: none;
-    transform: none;
   }
 }
 

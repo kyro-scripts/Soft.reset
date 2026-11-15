@@ -107,9 +107,8 @@
       .map(function (s) {
         return (
           '<button type="button" class="opt" data-id="' + esc(s.id) + '" aria-pressed="false">' +
-          '<span class="icon-badge icon-badge--sm">' + SR.icon(s.icon) + "</span>" +
-          '<span class="opt-main"><span class="opt-top"><strong>' + esc(s.name) + '</strong><span class="opt-price">' + money(s.price) + "</span></span>" +
-          '<span class="opt-meta">' + esc(s.summary) + "</span></span>" +
+          '<span class="opt-top"><strong><span class="icon-badge">' + SR.icon(s.icon) + "</span>" + esc(s.name) + '</strong><span class="opt-price">' + money(s.price) + "</span></span>" +
+          '<span class="opt-meta">' + esc(s.summary) + "</span>" +
           "</button>"
         );
       })
