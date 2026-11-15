@@ -107,8 +107,9 @@
       .map(function (s) {
         return (
           '<button type="button" class="opt" data-id="' + esc(s.id) + '" aria-pressed="false">' +
-          '<span class="opt-top"><strong>' + esc(s.name) + '</strong><span class="opt-price">' + money(s.price) + "</span></span>" +
-          '<span class="opt-meta">' + esc(s.summary) + "</span>" +
+          '<span class="icon-badge icon-badge--sm">' + SR.icon(s.icon) + "</span>" +
+          '<span class="opt-main"><span class="opt-top"><strong>' + esc(s.name) + '</strong><span class="opt-price">' + money(s.price) + "</span></span>" +
+          '<span class="opt-meta">' + esc(s.summary) + "</span></span>" +
           "</button>"
         );
       })
@@ -162,7 +163,7 @@
 
   function updateSummary() {
     document.getElementById("sum-service").textContent = state.service ? state.service.name : "Not selected";
-    document.getElementById("sum-price").textContent = state.service ? money(state.service.price) : "—";
+    document.getElementById("sum-price").textContent = state.service ? money(state.service.price) : "Choose a service";
     document.getElementById("sum-time").textContent = state.slot
       ? fmtLong(state.day.anchor) + " at " + fmtTime(state.slot) + " " + tzAbbr(state.slot)
       : "Flexible, or not sure yet";

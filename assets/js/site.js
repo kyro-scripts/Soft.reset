@@ -9,8 +9,6 @@
   var esc = SR.esc;
   var money = SR.money;
 
-  var DRAFT = '<span class="draft-flag">DRAFT · awaiting owner approval</span>';
-
   /* ---------- Simple fills ---------- */
 
   document.querySelectorAll("[data-brand]").forEach(function (el) { el.textContent = cfg.brand; });
@@ -21,10 +19,15 @@
     el.href = "mailto:" + cfg.contactEmail;
   });
 
-  // Policy text: shows the answer once decided, otherwise a DRAFT flag.
+  // Policy text. A policy with no answer hides the line that uses it, so nothing unfinished shows.
   document.querySelectorAll("[data-policy]").forEach(function (el) {
     var value = cfg.policies && cfg.policies[el.getAttribute("data-policy")];
-    el.innerHTML = value ? esc(value) : DRAFT;
+    var line = el.closest("li, p");
+    if (value) {
+      el.textContent = value;
+    } else if (line) {
+      line.hidden = true;
+    }
   });
 
   /* ---------- Contact channels ---------- */
@@ -38,7 +41,8 @@
     el.innerHTML = channels
       .map(function (c) {
         return (
-          '<article class="channel-card">' +
+          '<article class="channel-card reveal">' +
+          '<span class="icon-badge">' + SR.icon(c.icon) + "</span>" +
           "<h3>" + esc(c.label) + "</h3>" +
           '<p class="handle">' + esc(c.handle) + "</p>" +
           '<div class="channel-actions">' +
@@ -60,8 +64,9 @@
     homeServices.innerHTML = cfg.services
       .map(function (s) {
         return (
-          '<li class="service-row">' +
-          '<div><a class="service-name" href="services.html#' + esc(s.id) + '">' + esc(s.name) + "</a>" +
+          '<li class="service-row reveal">' +
+          '<span class="icon-badge">' + SR.icon(s.icon) + "</span>" +
+          '<div class="service-main"><a class="service-name" href="services.html#' + esc(s.id) + '">' + esc(s.name) + "</a>" +
           '<p class="muted">' + esc(s.problem) + "</p></div>" +
           '<p class="service-price">' + money(s.price) + "</p></li>"
         );
@@ -75,8 +80,9 @@
     serviceSections.innerHTML = cfg.services
       .map(function (s) {
         return (
-          '<section class="service-detail" id="' + esc(s.id) + '" aria-labelledby="h-' + esc(s.id) + '">' +
+          '<section class="service-detail reveal" id="' + esc(s.id) + '" aria-labelledby="h-' + esc(s.id) + '">' +
           '<div class="service-intro">' +
+          '<span class="icon-badge icon-badge--lg">' + SR.icon(s.icon) + "</span>" +
           '<p class="service-price-tag">' + money(s.price) + "</p>" +
           '<h2 id="h-' + esc(s.id) + '">' + esc(s.name) + "</h2>" +
           '<p class="service-summary">' + esc(s.summary) + "</p>" +
@@ -104,7 +110,8 @@
     pricingCards.innerHTML = cfg.services
       .map(function (s) {
         return (
-          '<article class="card price-card">' +
+          '<article class="card price-card reveal">' +
+          '<span class="icon-badge">' + SR.icon(s.icon) + "</span>" +
           "<h3>" + esc(s.name) + "</h3>" +
           '<p class="price">' + money(s.price) + "</p>" +
           '<p class="muted">' + esc(s.summary) + "</p>" +
@@ -143,8 +150,8 @@
           '<tr><th scope="row">' + esc(r.label) + "</th>" +
           cfg.services.map(function (s) {
             return s.covers && s.covers[r.key]
-              ? '<td><span class="yes" aria-label="Included">Included</span></td>'
-              : '<td><span class="no" aria-label="Not included">—</span></td>';
+              ? '<td><span class="yes">' + SR.icon("check") + "Included</span></td>"
+              : '<td><span class="no">' + SR.icon("x") + '<span class="visually-hidden">Not included</span></span></td>';
           }).join("") +
           "</tr>"
         );
@@ -174,14 +181,9 @@
   if (faqList) {
     faqList.innerHTML = cfg.faq
       .map(function (item) {
-        var answer;
-        if (item.a) {
-          answer = esc(item.a);
-        } else {
-          var value = cfg.policies && cfg.policies[item.policy];
-          answer = value ? esc(value) : DRAFT;
-        }
-        return "<details><summary>" + esc(item.q) + "</summary><p>" + answer + "</p></details>";
+        var answer = item.a || (item.policy && cfg.policies && cfg.policies[item.policy]) || "";
+        if (!answer) return "";
+        return '<details class="reveal"><summary>' + esc(item.q) + "</summary><p>" + esc(answer) + "</p></details>";
       })
       .join("");
   }
@@ -229,7 +231,7 @@
         .map(function (p) {
           var media = p.image
             ? '<img src="' + esc(p.image) + '" alt="" loading="lazy" />'
-            : '<span class="product-initial">' + esc(p.name.charAt(0)) + "</span>";
+            : '<span class="product-icon">' + SR.icon(p.icon || "package") + "</span>";
           // Three states only: sold out (status), ready to buy (real link), or no checkout yet (a real link to contact).
           var buy;
           if (p.soldOut) {
@@ -240,7 +242,7 @@
             buy = '<a class="btn btn-ghost" href="contact.html">Ask about this item</a>';
           }
           return (
-            '<article class="card product-card">' +
+            '<article class="card product-card reveal">' +
             '<div class="product-media">' + media + (p.badge ? '<span class="badge">' + esc(p.badge) + "</span>" : "") + "</div>" +
             '<div class="product-body">' +
             '<span class="product-type">' + esc(p.type || "Product") + "</span>" +
@@ -267,6 +269,36 @@
         banner.focus();
       }
     }
+  }
+
+  /* ---------- Static icons and reveal on scroll ---------- */
+
+  // Any element with data-icon gets that icon. Icons are decorative, so the words beside them carry the meaning.
+  document.querySelectorAll("[data-icon]").forEach(function (el) {
+    el.innerHTML = SR.icon(el.getAttribute("data-icon"));
+  });
+
+  // Elements marked .reveal fade and rise into place as they reach the screen. Siblings get a
+  // small delay so a list builds up in order. Without JavaScript nothing is hidden.
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  revealEls.forEach(function (el) {
+    var siblings = el.parentElement
+      ? Array.prototype.filter.call(el.parentElement.children, function (c) { return c.classList.contains("reveal"); })
+      : [el];
+    el.style.setProperty("--i", String(Math.max(0, siblings.indexOf(el))));
+  });
+  if ("IntersectionObserver" in window) {
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
+    revealEls.forEach(function (el) { revealObserver.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add("is-visible"); });
   }
 
   /* ---------- Copy buttons and tracking (event delegation) ---------- */

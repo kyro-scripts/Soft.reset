@@ -1,20 +1,20 @@
 /* =========================================================
    softreset — site configuration
    Edit this file to change services, prices, contact channels,
-   FAQ policies, reviews, and the optional booking endpoint.
+   FAQ answers, policies, reviews, and the optional booking endpoint.
    ========================================================= */
 window.SOFTRESET_CONFIG = {
   brand: "softreset",
   tagline: "Remote Windows help. You stay in control.",
-  siteUrl: "https://softreset.cc",   // used for canonical links and sitemap.xml. Confirm before launch.
+  siteUrl: "https://softreset.cc",   // used for canonical links and sitemap.xml
   contactEmail: "",                  // leave "" to hide email everywhere
 
   /* Contact channels. Shown on the contact page, home page, and footer.
-     Delete an entry to hide that channel. */
+     Delete an entry to hide that channel. "icon" is one of the names in assets/js/common.js. */
   contactChannels: [
-    { id: "tiktok", label: "TikTok", handle: "@softreset.cc", url: "https://www.tiktok.com/@softreset.cc" },
-    { id: "instagram", label: "Instagram", handle: "@softreset.cc", url: "https://www.instagram.com/softreset.cc/" },
-    { id: "discord", label: "Discord", handle: "Join our server", url: "https://discord.gg/snYQn8Pwk8" },
+    { id: "tiktok", label: "TikTok", handle: "@softreset.cc", url: "https://www.tiktok.com/@softreset.cc", icon: "music" },
+    { id: "instagram", label: "Instagram", handle: "@softreset.cc", url: "https://www.instagram.com/softreset.cc/", icon: "camera" },
+    { id: "discord", label: "Discord", handle: "Join our server", url: "https://discord.gg/snYQn8Pwk8", icon: "chat" },
   ],
 
   /* Pre-written messages, copied to the clipboard so visitors can paste them into the platform they pick.
@@ -41,6 +41,7 @@ window.SOFTRESET_CONFIG = {
       id: "essential",
       name: "Essential",
       price: 25,
+      icon: "sparkles",
       summary: "Basic Windows cleanup.",
       problem: "Your PC feels cluttered, or it's slow to start and you're not sure what's running.",
       bestFor: "A basic tidy-up for a PC that's getting crowded.",
@@ -56,6 +57,7 @@ window.SOFTRESET_CONFIG = {
       id: "advanced",
       name: "Advanced",
       price: 35,
+      icon: "gauge",
       summary: "Cleanup and performance diagnostics.",
       problem: "Your PC is slow overall, or something specific like gaming feels worse than it should, and you want to know why.",
       bestFor: "Anyone who wants to understand what's slowing the PC, not just tidy it up.",
@@ -72,6 +74,7 @@ window.SOFTRESET_CONFIG = {
       id: "desktop-makeover",
       name: "Desktop Makeover",
       price: 20,
+      icon: "palette",
       summary: "Personalized Windows appearance.",
       problem: "Your desktop is messy, or it doesn't feel like yours.",
       bestFor: "Anyone who wants a tidier, more personal Windows look.",
@@ -87,6 +90,7 @@ window.SOFTRESET_CONFIG = {
       id: "file-organization",
       name: "File Organization",
       price: 20,
+      icon: "folder",
       summary: "Organize scattered files and folders.",
       problem: "Your documents, downloads, and photos are scattered, and you can't find what you need.",
       bestFor: "When finding files is the real problem.",
@@ -104,6 +108,7 @@ window.SOFTRESET_CONFIG = {
       id: "complete-refresh",
       name: "Complete Refresh",
       price: 45,
+      icon: "refresh",
       summary: "Full Windows refresh.",
       problem: "You want one session that covers cleanup, diagnostics, and a tidy desktop.",
       bestFor: "A full refresh of your Windows setup.",
@@ -117,46 +122,50 @@ window.SOFTRESET_CONFIG = {
     },
   ],
 
-  /* ---- Policies. Leave a value as null until you've decided it.
-     The site shows a DRAFT flag for every null policy, so nothing undecided goes live by accident. ---- */
+  /* ---- Policies. The wording below is a draft of the owner's position, not legal advice.
+     A policy set to "" hides every line and FAQ item that uses it, so nothing unfinished shows. ---- */
   policies: {
-    remoteTool: null,          // which remote support tool you use (must be properly licensed)
-    installSoftware: null,     // whether the customer installs anything
-    sessionLength: null,       // how long each service typically takes
-    paymentTiming: null,       // how and when payment is requested
-    refunds: null,             // refund policy
-    unresolvedIssues: null,    // what happens if an issue can't be fixed
-    retention: null,           // how long request details are kept
+    installSoftware: "We'll tell you before the session if anything needs to be installed. We never install software you haven't agreed to.",
+    sessionLength: "It depends on the service and what your PC needs. We agree on a time before we start, and you can stop at any point.",
+    paymentTiming: "We confirm the price with you before anything is booked, and we agree on how payment works at that point.",
+    refunds: "It depends on what was done and when. Message us and we'll talk through what applies to your case.",
+    productReturns: "Message us about any problem with an item and we'll talk through the options with you.",
+    unresolvedIssues: "Not every issue can be fixed. If we can't resolve it, we'll tell you what we tried, what we found, and what we'd suggest next.",
+    retention: "We keep request details only as long as we need them to reply to you and run your session.",
   },
 
   /* ---- FAQ. Each item has either a fixed answer (a) or a policy key from above (policy). ---- */
   faq: [
     {
       q: "How does remote PC support work?",
-      a: "You share your screen with us through a remote support connection that you approve. We explain each step, and we only make changes you have approved.",
+      a: "You share your screen with us through a remote support connection that you approve. We explain each step as we go, and we only make changes you've approved.",
     },
     {
       q: "Will you be able to see my personal files?",
-      a: "During a session we can see what's on your screen. We only look at files the service you chose needs, and only with your permission.",
+      a: "During a session we can see what's on your screen. We only look at the files the service you chose needs, and only with your permission.",
     },
     {
       q: "Can I disconnect at any time?",
-      a: "Yes. You can end the connection at any time, and you can tell us to stop.",
+      a: "Yes. You can end the connection whenever you like, and you can tell us to stop at any point.",
+    },
+    {
+      q: "How do you connect to my PC?",
+      a: "When the session starts, we ask for a one-time session code so we can connect. Only share it during a session you've booked and are sitting at your PC for.",
     },
     {
       q: "Will my PC definitely become faster?",
       a: "No, and we won't promise a specific speed or gaming result. We look at what's slowing your PC, make the changes you approve, and tell you what we found and what changed.",
     },
     {
-      q: "What happens if my issue cannot be resolved?",
+      q: "What if my issue can't be fixed?",
       policy: "unresolvedIssues",
     },
     {
       q: "Do you delete files?",
-      a: "Not without your explicit approval. We don't delete, rename, or move important files. For significant file changes we plan a backup first. Unused apps and temporary files are removed only after you approve them.",
+      a: "Not without your approval. We don't delete, rename, or move important files. Before any significant file change, we plan a backup first. Unused apps and temporary files are only removed once you approve them.",
     },
     {
-      q: "Do I need to install software?",
+      q: "Do I need to install anything?",
       policy: "installSoftware",
     },
     {
@@ -173,7 +182,7 @@ window.SOFTRESET_CONFIG = {
     },
     {
       q: "What happens after the session?",
-      a: "You receive a summary of the work we completed, what we changed, and anything we recommend you check later. You're welcome to give feedback afterwards.",
+      a: "You get a summary of the work we completed, what we changed, and anything we suggest you check later. Feedback is always welcome.",
     },
   ],
 
@@ -199,7 +208,8 @@ window.SOFTRESET_CONFIG = {
 
   /* ---- Products (shop page, physical items) ----
      Each product has its own Stripe Payment Link (one item per checkout).
-     image: optional path or URL. Leave "" to show a tile with the product's initial.
+     icon: one of the names in assets/js/common.js, shown when there is no image.
+     image: optional path or URL. Leave "" to show the icon.
      soldOut: true disables the buy button. Stock is NOT tracked automatically. */
   shippingNote: "Shipping is added at checkout.",
   orderThanksMessage: "Thanks for your order! We'll email you with shipping updates.",
@@ -209,6 +219,7 @@ window.SOFTRESET_CONFIG = {
       name: "Cable Management Kit",
       price: 22,
       type: "Desk accessory",
+      icon: "package",
       description: "Velcro ties, clips, and a sleeve to keep cables tidy behind your desk.",
       image: "",
       stripeLink: "",
@@ -221,6 +232,7 @@ window.SOFTRESET_CONFIG = {
       name: "Screen & Keyboard Cleaning Kit",
       price: 14,
       type: "Cleaning kit",
+      icon: "sparkles",
       description: "A microfiber cloth, a small brush, and a cleaner made for screens and keyboards.",
       image: "",
       stripeLink: "",
@@ -233,6 +245,7 @@ window.SOFTRESET_CONFIG = {
       name: "XL Desk Mat",
       price: 29,
       type: "Desk accessory",
+      icon: "layout",
       description: "A large, stitched-edge mat with a non-slip base for your keyboard and mouse.",
       image: "",
       stripeLink: "",

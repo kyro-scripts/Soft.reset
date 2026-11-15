@@ -24,7 +24,7 @@ A static site with no build step. Open `index.html` through a local server (see 
 
 ## Before going live
 
-Work through this list in order. Every item marked **owner decision** is shown on the site as a DRAFT flag until you fill it in.
+Work through this list in order. Every item marked **owner decision** has working wording in `assets/js/config.js`. Visitors see that wording as final, so check each line against what you actually do.
 
 ### 1. Confirm the basics (`config.js`)
 - `siteUrl`: your real domain. Canonical links and `sitemap.xml` use `https://softreset.cc`. If that changes, update `siteUrl`, the `canonical` and `og:url` tags on each page, and `sitemap.xml` and `robots.txt`.
@@ -32,18 +32,18 @@ Work through this list in order. Every item marked **owner decision** is shown o
 - `contactEmail`: left as `""`, so no email address appears. Add one if you want it shown.
 - `timezone`, `workDays`, `workHours`, `minLeadHours`: your availability. Times are offered in Central Time.
 
-### 2. Decide the policies (owner decision)
-Each policy in `policies` is `null` until you decide it. Any `null` policy shows **DRAFT · awaiting owner approval** on the pages that use it. Replace each `null` with a plain sentence once you've decided:
+### 2. Check the policies (owner decision)
+Each policy in `policies` in `assets/js/config.js` holds working wording, written so it makes no specific promises. Visitors see it as final text, so edit any sentence that doesn't match what you do. A policy set to `""` hides every FAQ item or line that uses it, so nothing half-written shows:
 
-- `remoteTool`: the remote support tool you use. It must be properly licensed for business use.
-- `installSoftware`: whether the customer installs anything.
-- `sessionLength`: how long each service typically takes.
-- `paymentTiming`: how and when payment is requested.
-- `refunds`: your refund policy.
-- `unresolvedIssues`: what happens if a problem can't be fixed.
+- `installSoftware`: whether anything is installed on the customer's PC.
+- `sessionLength`: how long a session typically takes.
+- `paymentTiming`: how and when payment is taken.
+- `refunds`: your refund policy for services.
+- `productReturns`: returns for physical products.
+- `unresolvedIssues`: what happens if an issue can't be fixed.
 - `retention`: how long request details are kept.
 
-The FAQ entries that depend on these are marked with a `policy` key, so they pick up your answer automatically.
+The FAQ entries that depend on these are marked with a `policy` key, so they pick up your answer automatically. The remote support tool is deliberately not named anywhere on the site. Keep it that way.
 
 ### 3. Set up payments for products (Stripe Payment Links)
 The site takes no payment for services right now. Visitors request a service and you confirm the price and time by message. How and when you collect payment for services is the `paymentTiming` decision in section 2. Only physical products use Stripe on the site.
@@ -84,7 +84,7 @@ The payload looks like this:
 }
 ```
 
-`preferredTime` is `null` when the visitor doesn't pick a time. The form never asks for passwords, payment card details, remote-access codes, or sensitive files.
+`preferredTime` is `null` when the visitor doesn't pick a time. The form never asks for passwords, payment card details, codes sent to a phone or email, or sensitive files. The one session code is requested only during a session the customer has booked.
 
 ### 5. Reviews (consent required)
 `testimonials` is empty, so the reviews section stays hidden. Add a review only after the customer agrees in writing to it being published:
