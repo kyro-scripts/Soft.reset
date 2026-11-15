@@ -1,5 +1,5 @@
 /* Request a session.
-   The visitor picks a service and an optional preferred time, then describes the problem.
+   The visitor picks one or more services and an optional preferred time, then describes the problem.
    Nothing is booked or charged here. We confirm the time and price by message first.
 
    - With cfg.bookingEndpoint set: the request is sent there, and the page says it was received.
@@ -93,7 +93,7 @@
   }
 
   var state = {
-    service: null,
+    services: [],
     day: null,
     slot: null,
     submitting: false,
@@ -115,9 +115,13 @@
       .join("");
   }
 
+  function isChosen(id) {
+    return state.services.some(function (s) { return s.id === id; });
+  }
+
   function paintServices() {
     serviceWrap.querySelectorAll(".opt").forEach(function (b) {
-      b.setAttribute("aria-pressed", String(!!state.service && b.getAttribute("data-id") === state.service.id));
+      b.setAttribute("aria-pressed", String(isChosen(b.getAttribute("data-id"))));
     });
   }
 
@@ -160,9 +164,38 @@
       .join("");
   }
 
+  function totalPrice() {
+    return state.services.reduce(function (sum, s) { return sum + s.price; }, 0);
+  }
+
+  // Service A is included in service B when every part of A's work is also part of B.
+  function coveredKeys(s) {
+    return Object.keys(s.covers).filter(function (k) { return !!s.covers[k]; });
+  }
+
+  function isWithin(a, b) {
+    return coveredKeys(a).every(function (k) { return !!b.covers[k]; });
+  }
+
+  // Names chosen services that another chosen service already includes. Prices are not changed here.
+  function overlapNote() {
+    var notes = [];
+    state.services.forEach(function (s) {
+      var parent = state.services.filter(function (t) {
+        return t !== s && isWithin(s, t) && !isWithin(t, s);
+      })[0];
+      if (parent) notes.push(parent.name + " already includes " + s.name + ".");
+    });
+    if (!notes.length) return "";
+    return notes.join(" ") + " We'll confirm the combined price with you before anything is booked.";
+  }
+
   function updateSummary() {
-    document.getElementById("sum-service").textContent = state.service ? state.service.name : "Not selected";
-    document.getElementById("sum-price").textContent = state.service ? money(state.service.price) : "Choose a service";
+    var names = state.services.map(function (s) { return s.name; });
+    document.getElementById("sum-service").textContent = names.length ? names.join(", ") : "Not selected";
+    document.getElementById("sum-price").textContent = names.length ? money(totalPrice()) : "Choose a service";
+    var noteEl = document.getElementById("sum-note");
+    if (noteEl) noteEl.textContent = overlapNote();
     document.getElementById("sum-time").textContent = state.slot
       ? fmtLong(state.day.anchor) + " at " + fmtTime(state.slot) + " " + tzAbbr(state.slot)
       : "Flexible, or not sure yet";
@@ -190,7 +223,7 @@
   serviceWrap.addEventListener("click", function (e) {
     var btn = e.target.closest(".opt");
     if (!btn) return;
-    selectService(btn.getAttribute("data-id"));
+    toggleService(btn.getAttribute("data-id"));
   });
 
   dayWrap.addEventListener("click", function (e) {
@@ -211,8 +244,14 @@
     updateSummary();
   });
 
-  function selectService(id) {
-    state.service = SR.service(id);
+  function toggleService(id) {
+    if (!SR.service(id)) return;
+    if (isChosen(id)) {
+      state.services = state.services.filter(function (s) { return s.id !== id; });
+    } else {
+      // Keep the services in the order they appear on the page.
+      state.services = cfg.services.filter(function (s) { return s.id === id || isChosen(s.id); });
+    }
     paintServices();
     updateSummary();
     clearError();
@@ -222,8 +261,8 @@
 
   function buildMessage(payload) {
     return cfg.requestMessage
-      .replace("{service}", payload.service.name)
-      .replace("{price}", money(payload.service.price))
+      .replace("{service}", payload.services.map(function (s) { return s.name; }).join(", "))
+      .replace("{price}", money(payload.total))
       .replace("{time}", payload.preferredTime ? payload.preferredTime.label : "flexible")
       .replace("{name}", payload.customer.name)
       .replace("{issue}", payload.issue);
@@ -293,7 +332,7 @@
   /* ---------- Submit ---------- */
 
   function validate() {
-    if (!state.service) return "Choose a service first.";
+    if (!state.services.length) return "Choose a service first.";
     if (!form.checkValidity()) {
       form.reportValidity();
       return "Please fill in the highlighted fields.";
@@ -315,7 +354,9 @@
     var fd = new FormData(form);
     var payload = {
       source: "website",
-      service: { id: state.service.id, name: state.service.name, price: state.service.price, currency: cfg.currency },
+      services: state.services.map(function (s) { return { id: s.id, name: s.name, price: s.price }; }),
+      total: totalPrice(),
+      currency: cfg.currency,
       preferredTime: state.slot
         ? { startsAt: state.slot.toISOString(), label: fmtLong(state.day.anchor) + " at " + fmtTime(state.slot), timezone: TZ }
         : null,
@@ -334,7 +375,7 @@
       form.hidden = true;
       summary.hidden = true;
       renderOutcome("ready", payload, message);
-      SR.track("request_ready", { service: payload.service.id });
+      SR.track("request_ready", { services: payload.services.map(function (s) { return s.id; }).join(",") });
       return;
     }
 
@@ -349,14 +390,14 @@
         form.hidden = true;
         summary.hidden = true;
         renderOutcome("received", payload, message);
-        SR.track("request_submit", { service: payload.service.id });
+            SR.track("request_submit", { services: payload.services.map(function (s) { return s.id; }).join(",") });
       })
       .catch(function (err) {
         console.error(err);
         form.hidden = true;
         summary.hidden = true;
         renderOutcome("failed", payload, message);
-        SR.track("request_failed", { service: payload.service.id });
+        SR.track("request_failed", { services: payload.services.map(function (s) { return s.id; }).join(",") });
       })
       .then(function () { setSubmitting(false); });
   });
@@ -365,7 +406,12 @@
 
   renderServices();
   var wanted = new URLSearchParams(window.location.search).get("service");
-  if (wanted) selectService(wanted);
+  if (wanted) {
+    // A link can preselect one service (?service=advanced) or several (?service=essential,advanced).
+    var wantedIds = wanted.split(",").map(function (id) { return id.trim(); });
+    state.services = cfg.services.filter(function (s) { return wantedIds.indexOf(s.id) !== -1; });
+    paintServices();
+  }
   renderDays();
   renderTimes();
   updateSummary();

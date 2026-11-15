@@ -213,6 +213,8 @@ window.SOFTRESET_CONFIG = {
      soldOut: true disables the buy button. Stock is NOT tracked automatically. */
   shippingNote: "Shipping is added at checkout.",
   orderThanksMessage: "Thanks for your order! We'll email you with shipping updates.",
+  // Set to true when products are ready to sell. Until then the products page says "Coming soon".
+  productsOpen: false,
   products: [
     {
       id: "cable-management-kit",

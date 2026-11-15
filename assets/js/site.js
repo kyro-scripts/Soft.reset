@@ -214,7 +214,12 @@
   /* ---------- Products (shop page) ---------- */
 
   var productGrid = document.getElementById("product-grid");
-  if (productGrid) {
+  var productsOpen = cfg.productsOpen === true;
+  var comingSoon = document.getElementById("coming-soon");
+  var productArea = document.getElementById("product-area");
+  if (comingSoon) comingSoon.hidden = productsOpen;
+  if (productArea) productArea.hidden = !productsOpen;
+  if (productGrid && productsOpen) {
     var products = Array.isArray(cfg.products) ? cfg.products : [];
     var shipNote = document.getElementById("shipping-note");
 

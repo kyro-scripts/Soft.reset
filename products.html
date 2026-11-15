@@ -23,15 +23,16 @@
   </div>
 
   <main id="main">
-    <section class="page-hero">
+    <section class="page-hero" id="coming-soon">
       <div class="container">
-        <h1>Tools to keep your PC setup tidy.</h1>
-        <p class="lead">Cleaning kits and desk accessories for your PC setup, from the same people who do the refreshes.</p>
+        <p class="product-type">Products</p>
+        <h1>Coming soon.</h1>
+        <p class="lead">Cleaning kits and desk accessories for your PC setup are on the way. We'll list them here when they're ready.</p>
         <p class="muted">Would you rather we did the work? <a href="book.html">Request a session</a>.</p>
       </div>
     </section>
 
-    <section class="section-tight" aria-label="Products">
+    <section class="section-tight" id="product-area" aria-label="Products" hidden>
       <div class="container">
         <!-- Shown after a completed order (the payment page redirects to products.html?order=1) -->
         <div id="status-banner" class="banner is-success" role="status" tabindex="-1" hidden></div>
@@ -39,7 +40,7 @@
         <p id="shipping-note" class="shipping-note" hidden></p>
 
         <div id="product-grid" class="product-grid" aria-live="polite">
-          <!-- Filled from assets/js/config.js -->
+          <!-- Filled from assets/js/config.js when productsOpen is true -->
         </div>
 
         <p class="pricing-note">Prices are in USD. Questions about a product? <a href="contact.html">Message us</a>.</p>

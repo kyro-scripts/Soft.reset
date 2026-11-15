@@ -1874,6 +1874,105 @@ table.compare {
   color: var(--muted);
 }
 
+/* ---------- Type scale: one size per role on every page ---------- */
+
+/* Section titles share one size and sit left, like the cards under them. */
+h2,
+.service-detail h2 {
+  font-size: clamp(1.75rem, 3.4vw, 2.4rem);
+}
+
+.section-head {
+  text-align: left;
+  max-width: 44rem;
+  margin: 0 0 2rem;
+}
+
+/* Titles inside cards and panels share one smaller size. */
+.card h2,
+.notice h2 {
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+/* Step numbers (restored from the original stylesheet; the rebuild had dropped them). */
+.num {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 12px;
+  background: var(--navy);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* Helper text is never smaller than 14.4px. */
+.hint,
+.hero-note,
+.service-note,
+.price-best,
+.shipping-note,
+.legend-note {
+  font-size: 0.95rem;
+}
+
+.fine {
+  font-size: 0.9rem;
+}
+
+#sum-note:empty {
+  display: none;
+}
+
+/* Stop single words from sitting alone on the last line. */
+p {
+  text-wrap: pretty;
+}
+
+li,
+dd,
+summary {
+  text-wrap: balance;
+}
+
+/* Section titles outside the section-head pattern use the same size. */
+.prose h2 {
+  font-size: clamp(1.75rem, 3.4vw, 2.4rem);
+}
+
+/* Services is one tap away on phones, where the other links sit behind the menu button. */
+.nav-services {
+  display: none;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 0.9rem;
+  border-radius: 999px;
+  background: var(--blue-tint);
+  color: var(--navy);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-services[aria-current="page"] {
+  color: var(--blue);
+}
+
+@media (max-width: 1039px) {
+  .nav-services {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  .nav-toggle {
+    margin-left: 0.5rem;
+  }
+}
+
 /* ---------- Accessibility preferences ---------- */
 
 /* Reduced motion: no movement, no springing, no smooth scrolling. Colour and opacity still change, briefly,

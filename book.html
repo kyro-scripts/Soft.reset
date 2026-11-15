@@ -38,7 +38,8 @@
 
         <form id="request-form" class="book-form" novalidate>
           <fieldset class="step-box">
-            <legend><span class="num">1</span> Choose a service</legend>
+            <legend><span class="num">1</span> Choose one or more services</legend>
+            <p class="hint">Pick every service you want. <a href="services.html">See what each one includes</a>.</p>
             <div id="service-options" class="opt-grid"></div>
           </fieldset>
 
@@ -91,12 +92,13 @@
         <aside id="summary" class="card summary" aria-label="Request summary">
           <h2>Your request</h2>
           <dl>
-            <dt>Service</dt>
+            <dt>Services</dt>
             <dd id="sum-service">Not selected</dd>
             <dt>Preferred time</dt>
             <dd id="sum-time">Flexible, or not sure yet</dd>
           </dl>
-          <p class="total"><span>Price</span><span id="sum-price">Choose a service</span></p>
+          <p class="total"><span>Total</span><span id="sum-price">Choose a service</span></p>
+          <p id="sum-note" class="fine"></p>
           <p class="fine">Nothing is booked or charged yet. We confirm the price and time with you first.</p>
         </aside>
       </div>

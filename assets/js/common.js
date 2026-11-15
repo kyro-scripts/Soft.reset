@@ -132,6 +132,7 @@
       '<nav id="site-nav" class="site-nav" aria-label="Main">' + links +
       '<a class="btn btn-primary mobile-only" href="contact.html">Message Us</a></nav>' +
       '<a class="btn btn-primary nav-cta" href="contact.html">Message Us</a>' +
+      '<a class="nav-services" href="services.html"' + (page === "services" ? ' aria-current="page"' : "") + ">Services</a>" +
       '<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">' +
       '<svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' +
       '<svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +

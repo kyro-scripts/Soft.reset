@@ -12,8 +12,8 @@ A static site with no build step. Open `index.html` through a local server (see 
 | `how-it-works.html` | Step-by-step session process, what we can and can't access, staying safe |
 | `faq.html` | Frequently asked questions |
 | `contact.html` | TikTok, Instagram, and Discord, what to include, and how we handle information |
-| `book.html` | Request a session: pick a service, an optional time, and describe the problem |
-| `products.html` | Physical products with shipping notes |
+| `book.html` | Request a session: pick one or more services, an optional time, and describe the problem |
+| `products.html` | "Coming soon" until `productsOpen` is `true` in `config.js`, then the physical products with shipping notes |
 | `landing.html` | Facebook landing page. Not indexed (`noindex`), and excluded from `sitemap.xml` |
 | `assets/js/config.js` | **Edit this.** Services, prices, contact channels, policies, FAQ, products, reviews, booking settings |
 | `assets/js/common.js` | Shared header, footer, and helpers. Edit the navigation or footer links here once |
@@ -76,7 +76,9 @@ The payload looks like this:
 ```json
 {
   "source": "website",
-  "service": { "id": "advanced", "name": "Advanced", "price": 35, "currency": "USD" },
+  "services": [{ "id": "advanced", "name": "Advanced", "price": 35 }],
+  "total": 35,
+  "currency": "USD",
   "preferredTime": { "startsAt": "2026-11-16T15:00:00.000Z", "label": "Monday, November 16 at 9:00 AM CST", "timezone": "America/Chicago" },
   "customer": { "name": "…", "replyOn": "discord", "handle": "…" },
   "issue": "…",
