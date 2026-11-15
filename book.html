@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request a Session — softreset</title>
+  <meta name="description" content="Choose a service and tell us what's going on with your PC. We confirm the price and time with you before anything is booked." />
+  <link rel="canonical" href="https://softreset.cc/book.html" />
+  <meta property="og:title" content="Request a Session — softreset" />
+  <meta property="og:description" content="Tell us what's going on. We confirm the price and time before anything is booked." />
+  <meta property="og:url" content="https://softreset.cc/book.html" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M8.5 23.5h15a5.2 5.2 0 0 0 .6-10.36A7.7 7.7 0 0 0 9.6 11.9a6 6 0 0 0-1.1 11.6Z' fill='none' stroke='%231D6BFF' stroke-width='2.4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body data-page="book">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div id="site-header">
+    <noscript><nav class="noscript-links" aria-label="Main"><a href="index.html">Home</a> <a href="services.html">Services</a> <a href="pricing.html">Pricing</a> <a href="how-it-works.html">How It Works</a> <a href="faq.html">FAQ</a> <a href="products.html">Products</a> <a href="contact.html">Contact</a></nav></noscript>
+  </div>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Request a session</p>
+        <h1>Tell us what's going on.</h1>
+        <p class="lead">Choose a service and send your request. We confirm the price and time with you before anything is booked. You approve every change.</p>
+        <p class="muted">Not sure which service fits? <a href="contact.html">Message us first</a>.</p>
+      </div>
+    </section>
+
+    <section class="container book-page">
+      <div class="book-layout">
+        <!-- Result panel (shown after submitting). Full width, above the form. -->
+        <section id="request-outcome" class="outcome" tabindex="-1" hidden aria-live="polite"></section>
+
+        <form id="request-form" class="book-form" novalidate>
+          <fieldset class="step-box">
+            <legend><span class="num">1</span> Choose a service</legend>
+            <div id="service-options" class="opt-grid"></div>
+          </fieldset>
+
+          <fieldset class="step-box">
+            <legend><span class="num">2</span> Preferred time <span class="legend-note">(optional)</span></legend>
+            <div id="date-options" class="date-strip" role="group" aria-label="Preferred day"></div>
+            <div id="time-options" class="time-grid" role="group" aria-label="Preferred time"></div>
+            <p id="tz-note" class="hint"></p>
+          </fieldset>
+
+          <fieldset class="step-box">
+            <legend><span class="num">3</span> Your details</legend>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="f-name">First name, or the name you go by <span aria-hidden="true">*</span></label>
+                <input id="f-name" name="name" type="text" autocomplete="given-name" required maxlength="80" />
+              </div>
+              <div class="field">
+                <label for="f-reply">Where should we reply? <span aria-hidden="true">*</span></label>
+                <select id="f-reply" name="reply" required></select>
+              </div>
+              <div class="field">
+                <label for="f-handle">Your username there <span class="muted">(optional)</span></label>
+                <input id="f-handle" name="handle" type="text" autocomplete="off" maxlength="80" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-issue">What's going on with your PC? <span aria-hidden="true">*</span></label>
+              <textarea id="f-issue" name="issue" rows="4" required minlength="10" maxlength="1000" placeholder="For example: it takes several minutes to start, and games stutter."></textarea>
+              <p class="hint">A sentence or two is enough.</p>
+            </div>
+
+            <label class="check">
+              <input type="checkbox" name="agree" required />
+              <span>I understand that nothing is changed without my approval, and that I can end any remote connection at any time. <span aria-hidden="true">*</span></span>
+            </label>
+
+            <p class="hint">This form doesn't save your details on this website. <a href="contact.html#privacy">How we handle your information</a>.</p>
+          </fieldset>
+
+          <div class="form-footer">
+            <p id="form-error" class="error" role="alert" hidden></p>
+            <button type="submit" id="submit-btn" class="btn btn-primary btn-lg">Send my request</button>
+            <p class="fine"><span aria-hidden="true">*</span> Required</p>
+          </div>
+        </form>
+
+        <aside id="summary" class="card summary" aria-label="Request summary">
+          <h2>Your request</h2>
+          <dl>
+            <dt>Service</dt>
+            <dd id="sum-service">Not selected</dd>
+            <dt>Preferred time</dt>
+            <dd id="sum-time">Flexible, or not sure yet</dd>
+          </dl>
+          <p class="total"><span>Price</span><span id="sum-price">—</span></p>
+          <p class="fine">Nothing is booked or charged yet. We confirm the price and time with you first.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/booking.js"></script>
+</body>
+</html>
