@@ -38,21 +38,14 @@
 
         <p id="closed-note" class="notice notice-warn" role="status" hidden></p>
         <form id="request-form" class="book-form" novalidate>
-          <fieldset class="step-box">
-            <legend><span class="num">1</span> Choose one or more services</legend>
+          <section class="step-box" aria-labelledby="step-services">
+            <h2 id="step-services" class="step-title"><span class="num" aria-hidden="true">1</span><span>Choose one or more services</span></h2>
             <p class="hint">Pick every service you want. <a href="services.html">See what each one includes</a>.</p>
             <div id="service-options" class="opt-grid"></div>
-          </fieldset>
+          </section>
 
-          <fieldset class="step-box">
-            <legend><span class="num">2</span> Preferred time <span class="legend-note">(optional)</span></legend>
-            <div id="date-options" class="date-strip" role="group" aria-label="Preferred day"></div>
-            <div id="time-options" class="time-grid" role="group" aria-label="Preferred time"></div>
-            <p id="tz-note" class="hint"></p>
-          </fieldset>
-
-          <fieldset class="step-box">
-            <legend><span class="num">3</span> Your details</legend>
+          <section class="step-box" aria-labelledby="step-details">
+            <h2 id="step-details" class="step-title"><span class="num" aria-hidden="true">2</span><span>Your details</span></h2>
 
             <div class="field-grid">
               <div class="field">
@@ -81,26 +74,39 @@
             </label>
 
             <p class="hint">This form doesn't save your details on this website. <a href="contact.html#privacy">How we handle your information</a>.</p>
-          </fieldset>
+          </section>
 
-          <div class="form-footer">
-            <p id="form-error" class="error" role="alert" hidden></p>
-            <button type="submit" id="submit-btn" class="btn btn-primary btn-lg">Send my request</button>
-            <p class="fine"><span aria-hidden="true">*</span> Required</p>
-          </div>
+          <section class="step-box" aria-labelledby="step-time">
+            <h2 id="step-time" class="step-title"><span class="num" aria-hidden="true">3</span><span>Preferred time <span class="legend-note">(optional)</span></span></h2>
+            <div id="date-options" class="date-strip" role="group" aria-label="Preferred day"></div>
+            <div id="time-options" class="time-grid" role="group" aria-label="Preferred time"></div>
+            <p id="tz-note" class="hint"></p>
+          </section>
+
+          <p class="fine form-required"><span aria-hidden="true">*</span> Required</p>
         </form>
 
-        <aside id="summary" class="card summary" aria-label="Request summary">
-          <h2>Your request</h2>
-          <dl>
-            <dt>Services</dt>
-            <dd id="sum-service">Not selected</dd>
-            <dt>Preferred time</dt>
-            <dd id="sum-time">Flexible, or not sure yet</dd>
-          </dl>
-          <p class="total"><span>Total</span><span id="sum-price">Choose a service</span></p>
-          <p id="sum-note" class="fine"></p>
-          <p class="fine">Nothing is booked or charged yet. We confirm the price and time with you first.</p>
+        <!-- Checkout: the total and the send button. Beside the form on wide screens; pinned to the bottom of the phone screen otherwise. -->
+        <aside id="summary" class="checkout" aria-label="Checkout">
+          <p id="form-error" class="error checkout-error" role="alert" hidden></p>
+          <div class="checkout-bar">
+            <div class="checkout-total">
+              <span class="checkout-label">Total</span>
+              <span id="sum-price" class="checkout-price">Choose a service</span>
+              <span id="sum-count" class="checkout-count">Nothing selected yet</span>
+            </div>
+            <button type="submit" form="request-form" id="submit-btn" class="btn btn-primary btn-lg checkout-submit">Send my request</button>
+          </div>
+          <div class="checkout-detail">
+            <h2>Your request</h2>
+            <ul id="sum-lines" class="sum-lines"></ul>
+            <dl>
+              <dt>Preferred time</dt>
+              <dd id="sum-time">Flexible, or not sure yet</dd>
+            </dl>
+            <p id="sum-note" class="fine"></p>
+            <p class="fine">Nothing is booked or charged yet. We confirm the price and time with you first.</p>
+          </div>
         </aside>
       </div>
     </section>

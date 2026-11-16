@@ -43,7 +43,7 @@ function money(amount, currency) {
 function check(body) {
   const services = (Array.isArray(body.services) ? body.services : [])
     .slice(0, 6)
-    .map((s) => ({ name: clean(s && s.name, LIMIT.service), price: Number(s && s.price) }))
+    .map((s) => ({ name: clean(s && s.name, LIMIT.service), price: Number(s && s.price), includedIn: clean(s && s.includedIn, LIMIT.service) }))
     .filter((s) => s.name && Number.isFinite(s.price) && s.price >= 0 && s.price <= 10000);
   if (!services.length) return { error: "Choose a service first." };
 
@@ -74,7 +74,9 @@ function check(body) {
 
 function embed(d) {
   const names = d.services.map((s) => s.name).join(", ");
-  const lines = d.services.map((s) => s.name + ": " + money(s.price, d.currency)).join("\n");
+  const lines = d.services
+    .map((s) => s.name + ": " + (s.includedIn ? "included in " + s.includedIn : money(s.price, d.currency)))
+    .join("\n");
   return {
     title: clean("New request: " + names, 250),
     color: 0x1d6bff,

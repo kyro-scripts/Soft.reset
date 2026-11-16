@@ -128,6 +128,7 @@
           '<button type="button" class="opt" data-id="' + esc(s.id) + '" aria-pressed="false">' +
           '<span class="opt-top"><strong><span class="icon-badge">' + SR.icon(s.icon) + "</span>" + esc(s.name) + '</strong><span class="opt-price">' + money(s.price) + "</span></span>" +
           '<span class="opt-meta">' + esc(s.summary) + "</span>" +
+          '<span class="opt-note" hidden></span>' +
           "</button>"
         );
       })
@@ -140,7 +141,15 @@
 
   function paintServices() {
     serviceWrap.querySelectorAll(".opt").forEach(function (b) {
-      b.setAttribute("aria-pressed", String(isChosen(b.getAttribute("data-id"))));
+      var s = SR.service(b.getAttribute("data-id"));
+      var chosen = isChosen(s.id);
+      var by = chosen ? includedBy(s) : null;
+      b.setAttribute("aria-pressed", String(chosen));
+      b.classList.toggle("is-included", !!by);
+      b.querySelector(".opt-price").innerHTML = by ? "<s>" + money(s.price) + "</s> " + money(0) : money(s.price);
+      var note = b.querySelector(".opt-note");
+      note.textContent = by ? "Included in " + by.name : "";
+      note.hidden = !by;
     });
   }
 
@@ -183,10 +192,6 @@
       .join("");
   }
 
-  function totalPrice() {
-    return state.services.reduce(function (sum, s) { return sum + s.price; }, 0);
-  }
-
   // Service A is included in service B when every part of A's work is also part of B.
   function coveredKeys(s) {
     return Object.keys(s.covers).filter(function (k) { return !!s.covers[k]; });
@@ -196,25 +201,48 @@
     return coveredKeys(a).every(function (k) { return !!b.covers[k]; });
   }
 
-  // Names chosen services that another chosen service already includes. Prices are not changed here.
-  function overlapNote() {
-    var notes = [];
-    state.services.forEach(function (s) {
-      var parent = state.services.filter(function (t) {
-        return t !== s && isWithin(s, t) && !isWithin(t, s);
-      })[0];
-      if (parent) notes.push(parent.name + " already includes " + s.name + ".");
+  // The chosen service that already covers this one, or null. If several do, the one covering the most work wins.
+  function includedBy(s) {
+    var parents = state.services.filter(function (t) {
+      return t !== s && isWithin(s, t) && !isWithin(t, s);
     });
-    if (!notes.length) return "";
-    return notes.join(" ") + " We'll confirm the combined price with you before anything is booked.";
+    if (!parents.length) return null;
+    parents.sort(function (a, b) { return coveredKeys(b).length - coveredKeys(a).length; });
+    return parents[0];
+  }
+
+  // An included service costs nothing extra, because the service that covers it is already paid for.
+  function priceOf(s) {
+    return includedBy(s) ? 0 : s.price;
+  }
+
+  function totalPrice() {
+    return state.services.reduce(function (sum, s) { return sum + priceOf(s); }, 0);
   }
 
   function updateSummary() {
-    var names = state.services.map(function (s) { return s.name; });
-    document.getElementById("sum-service").textContent = names.length ? names.join(", ") : "Not selected";
-    document.getElementById("sum-price").textContent = names.length ? money(totalPrice()) : "Choose a service";
-    var noteEl = document.getElementById("sum-note");
-    if (noteEl) noteEl.textContent = overlapNote();
+    var count = state.services.length;
+    var anyIncluded = state.services.some(function (s) { return !!includedBy(s); });
+
+    document.getElementById("sum-price").textContent = count ? money(totalPrice()) : "Choose a service";
+    document.getElementById("sum-count").textContent = count
+      ? count + (count === 1 ? " service" : " services") + (anyIncluded ? ", one included" : "")
+      : "Nothing selected yet";
+
+    document.getElementById("sum-lines").innerHTML = state.services
+      .map(function (s) {
+        var by = includedBy(s);
+        return (
+          "<li><span>" + esc(s.name) +
+          (by ? '<span class="sum-sub">Included in ' + esc(by.name) + "</span>" : "") +
+          "</span><span>" + (by ? "<s>" + money(s.price) + "</s> " + money(0) : money(s.price)) + "</span></li>"
+        );
+      })
+      .join("");
+
+    document.getElementById("sum-note").textContent = anyIncluded
+      ? "An included service is free, because the bigger service you chose already covers its work."
+      : "";
     document.getElementById("sum-time").textContent = state.slot
       ? fmtLong(state.day.anchor) + " at " + fmtTime(state.slot) + " " + tzAbbr(state.slot)
       : "Flexible, or not sure yet";
@@ -280,7 +308,9 @@
 
   function buildMessage(payload) {
     return cfg.requestMessage
-      .replace("{service}", payload.services.map(function (s) { return s.name; }).join(", "))
+      .replace("{service}", payload.services.map(function (s) {
+        return s.includedIn ? s.name + " (included in " + s.includedIn + ")" : s.name;
+      }).join(", "))
       .replace("{price}", money(payload.total))
       .replace("{time}", payload.preferredTime ? payload.preferredTime.label : "flexible")
       .replace("{name}", payload.customer.name)
@@ -377,7 +407,10 @@
     var fd = new FormData(form);
     var payload = {
       source: "website",
-      services: state.services.map(function (s) { return { id: s.id, name: s.name, price: s.price }; }),
+      services: state.services.map(function (s) {
+        var by = includedBy(s);
+        return { id: s.id, name: s.name, price: priceOf(s), listPrice: s.price, includedIn: by ? by.name : null };
+      }),
       total: totalPrice(),
       currency: cfg.currency,
       preferredTime: state.slot
@@ -435,7 +468,10 @@
       closedNote.textContent =
         "Requests are closed right now. We take them from " + windowText + ". You can also message us on TikTok, Instagram, or Discord.";
     }
-    if (submitBtn) submitBtn.disabled = !open;
+    if (submitBtn && !state.submitting) {
+      submitBtn.disabled = !open;
+      submitBtn.textContent = open ? "Send my request" : "Closed until " + hourLabel(cfg.workHours.start);
+    }
     return open;
   }
 

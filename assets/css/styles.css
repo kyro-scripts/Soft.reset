@@ -1026,7 +1026,7 @@ table.compare {
 
 .book-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 1.75rem;
   align-items: start;
 }
@@ -1047,22 +1047,24 @@ table.compare {
   box-shadow: var(--shadow-sm);
 }
 
-.step-box legend {
+.step-title {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0 0.4rem;
-  margin-bottom: 1rem;
+  gap: 0.7rem;
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  font-size: 1.1rem;
+  line-height: 1.3;
+  color: var(--navy);
 }
 
-.step-box legend .num {
-  width: 30px;
-  height: 30px;
-  font-size: 0.9rem;
-  border-radius: 10px;
+.step-title .num {
+  width: 32px;
+  height: 32px;
   margin: 0;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  flex: none;
 }
 
 .legend-note {
@@ -1128,6 +1130,18 @@ table.compare {
 .opt-meta {
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+.opt-price s {
+  font-weight: 600;
+  color: var(--muted);
+  margin-right: 0.15rem;
+}
+
+.opt-note {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--blue-dark);
 }
 
 .date-strip {
@@ -1281,42 +1295,121 @@ table.compare {
   letter-spacing: 0.01em;
 }
 
-.summary {
+/* Checkout: the total and the send button. A card beside the form on wide screens. */
+.checkout {
   position: sticky;
   top: 96px;
-}
-
-.summary h2 {
-  font-size: 1.4rem;
-}
-
-.summary dl {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.75rem 1rem;
-  margin: 1.25rem 0;
+  gap: 1rem;
+  padding: 1.5rem;
+  color: #fff;
+  background: linear-gradient(160deg, var(--navy) 0%, #1a3a7a 100%);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 40px rgba(11, 31, 75, 0.22);
 }
 
-.summary dt {
-  color: var(--muted);
+.checkout-bar {
+  display: grid;
+  gap: 1rem;
 }
 
-.summary dd {
-  margin: 0;
+.checkout-total {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.checkout-label {
+  font-size: 0.95rem;
   font-weight: 600;
-  text-align: right;
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.summary .total {
+.checkout-price {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.checkout-count {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkout-submit {
+  width: 100%;
+}
+
+.checkout .checkout-error {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  color: var(--danger);
+  background: #fff;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+.checkout-detail {
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  padding-top: 1rem;
+}
+
+.checkout-detail h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.sum-lines {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.sum-lines li {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
   gap: 1rem;
-  margin: 0.5rem 0 0;
-  padding-top: 0.75rem;
-  border-top: 1px dashed var(--line);
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.sum-lines s {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.sum-sub {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.checkout-detail dl {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0 0 1rem;
+}
+
+.checkout-detail dt {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.checkout-detail dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.checkout .fine {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* Result panel. Spans the full grid row and is shown after submitting. */
@@ -1680,9 +1773,52 @@ table.compare {
   .book-layout {
     grid-template-columns: 1fr;
   }
+}
 
-  .summary {
-    position: static;
+/* Phones: the total and the send button stay pinned to the bottom of the screen. */
+@media (max-width: 899px) {
+  .checkout {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem calc(0.85rem + env(safe-area-inset-bottom));
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -12px 32px rgba(11, 31, 75, 0.25);
+  }
+
+  .checkout-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .checkout-price {
+    font-size: 1.7rem;
+  }
+
+  .checkout-count {
+    font-size: 0.875rem;
+  }
+
+  .checkout-submit {
+    width: auto;
+    padding-inline: 1.25rem;
+  }
+
+  .checkout-detail {
+    display: none;
+  }
+
+  .book-page {
+    padding-bottom: 11rem;
+  }
+
+  html:has(body[data-page="book"]) {
+    scroll-padding-bottom: 12rem;
   }
 }
 
@@ -1698,6 +1834,14 @@ table.compare {
 }
 
 @media (max-width: 640px) {
+  .step-box {
+    padding: 1.25rem;
+  }
+
+  .opt {
+    padding: 0.85rem 1rem;
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
   }
