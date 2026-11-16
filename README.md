@@ -74,7 +74,7 @@ If you set an endpoint:
 - Use an API route on your own server, a webhook from Zapier or Make, or a form service.
 - If the endpoint is on another domain, it must allow CORS requests from `softreset.cc`.
 - The privacy and contact wording already describes the Discord relay. If you use a different endpoint, update the **Request form** line on `contact.html` and the privacy page to match.
-- Availability is not checked against your calendar. After you confirm a booking, add its time to `blockedSlots` in `config.js` (format `"2026-11-17 16:00"`), then push. `workHours` sets the window: currently 3pm to 10pm Central Time, and the form is closed outside it.
+- Availability is not checked against your calendar. After you confirm a booking, add its time to `blockedSlots` in `config.js` (format `"2026-11-17 16:00"`), then push. `workHours` sets when sessions can run: currently 3pm to 10pm Central Time. Requests can be sent at any hour.
 - Blocking a time after payment is not built, because the site has no checkout yet.
 
 The payload looks like this:

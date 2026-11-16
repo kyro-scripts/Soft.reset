@@ -78,11 +78,6 @@
     return p.y + "-" + pad(p.mo + 1) + "-" + pad(p.d) + " " + pad(p.h) + ":" + pad(p.mi);
   }
 
-  function requestsOpen(now) {
-    var h = zoneParts(now || new Date(), TZ).h;
-    return h >= cfg.workHours.start && h < cfg.workHours.end;
-  }
-
   /* ---------- Available days and times ---------- */
 
   function buildDays() {
@@ -392,11 +387,6 @@
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (state.submitting) return;
-    if (!paintHours()) {
-      showError("Requests are closed right now. We take them from " + windowText + ".");
-      return;
-    }
-
     var problem = validate();
     if (problem) {
       showError(problem);
@@ -458,23 +448,6 @@
       .then(function () { setSubmitting(false); });
   });
 
-  /* Closes the form outside the request window, and keeps the note and button in step with the clock. */
-  function paintHours() {
-    var open = requestsOpen(new Date());
-    var closedNote = document.getElementById("closed-note");
-    var submitBtn = document.getElementById("submit-btn");
-    if (closedNote) {
-      closedNote.hidden = open;
-      closedNote.textContent =
-        "Requests are closed right now. We take them from " + windowText + ". You can also message us on TikTok, Instagram, or Discord.";
-    }
-    if (submitBtn && !state.submitting) {
-      submitBtn.disabled = !open;
-      submitBtn.textContent = open ? "Send my request" : "Closed until " + hourLabel(cfg.workHours.start);
-    }
-    return open;
-  }
-
   /* ---------- Init ---------- */
 
   renderServices();
@@ -490,9 +463,7 @@
   updateSummary();
 
   document.getElementById("tz-note").textContent =
-    "Times shown in " + cfg.timezoneLabel + " (" + tzAbbr(new Date()) + "). We take requests from " + windowText + ". Optional: we confirm the time with you.";
-  paintHours();
-  setInterval(paintHours, 60000);
+    "Times shown in " + cfg.timezoneLabel + " (" + tzAbbr(new Date()) + "). Sessions run " + windowText + ". Optional: we confirm the time with you.";
 
   if (replySelect) {
     replySelect.innerHTML =

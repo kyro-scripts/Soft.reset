@@ -27,12 +27,13 @@ window.SOFTRESET_CONFIG = {
   timezone: "America/Chicago",       // times are offered in this zone
   timezoneLabel: "Central Time",
   workDays: [1, 2, 3, 4, 5],         // 0 = Sun ... 6 = Sat
-  /* Requests and time slots are taken only inside this window, in the timezone above.
-     15 to 22 is 3pm to 10pm. Outside it the request form is closed. 24-hour clock. */
+  /* Sessions can only be booked inside this window, in the timezone above (24-hour clock; 15 to 22 is 3pm to 10pm).
+     Requests can be sent at any hour. A 2pm request can book a 7pm session. */
   workHours: { start: 15, end: 22 },
   slotMinutes: 60,
   daysToShow: 14,
-  minLeadHours: 12,
+  /* Hours of notice needed before a session can start. 1 means a request sent at 2pm can book 3pm or later. */
+  minLeadHours: 1,
   /* Times you have already booked, in the timezone above, as "YYYY-MM-DD HH:mm" (24-hour).
      Add a time once you confirm a booking, and remove it when the time is free again. */
   blockedSlots: [],
