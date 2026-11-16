@@ -109,7 +109,6 @@
   var LOGO =
     '<svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">' +
     '<path d="M8.5 23.5h15a5.2 5.2 0 0 0 .6-10.36A7.7 7.7 0 0 0 9.6 11.9a6 6 0 0 0-1.1 11.6Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>' +
-    '<path d="M12.5 19.2c1.7-1.9 4-1.9 5.6 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>' +
     "</svg>";
 
   var NAV = [
