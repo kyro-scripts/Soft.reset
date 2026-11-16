@@ -27,12 +27,17 @@ window.SOFTRESET_CONFIG = {
   timezone: "America/Chicago",       // times are offered in this zone
   timezoneLabel: "Central Time",
   workDays: [1, 2, 3, 4, 5],         // 0 = Sun ... 6 = Sat
-  workHours: { start: 9, end: 17 },  // 24-hour clock
+  /* Requests and time slots are taken only inside this window, in the timezone above.
+     15 to 22 is 3pm to 10pm. Outside it the request form is closed. 24-hour clock. */
+  workHours: { start: 15, end: 22 },
   slotMinutes: 60,
   daysToShow: 14,
   minLeadHours: 12,
-  /* Optional. A URL that accepts a JSON POST (dashboard API, Zapier/Make webhook, form service).
-     Leave "" and nothing is saved. The form then gives the visitor a ready-to-send message instead. */
+  /* Times you have already booked, in the timezone above, as "YYYY-MM-DD HH:mm" (24-hour).
+     Add a time once you confirm a booking, and remove it when the time is free again. */
+  blockedSlots: [],
+  /* The request relay (relay/README.md). Paste the URL from `wrangler deploy` here. Leave "" and nothing is sent:
+     the form gives the visitor a ready-to-send message instead. */
   bookingEndpoint: "",
 
   /* ---- Services. Each one is a plain-English problem plus the work we do. ---- */

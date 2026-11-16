@@ -66,10 +66,28 @@
     return part ? part.value : "";
   }
 
+  /* ---------- Request window ---------- */
+
+  function hourLabel(h) { return (h % 12 || 12) + (h < 12 ? "am" : "pm"); }
+  var windowText = hourLabel(cfg.workHours.start) + " to " + hourLabel(cfg.workHours.end) + " " + cfg.timezoneLabel;
+
+  // "2026-11-17 16:00" in the booking timezone. Matches the entries in cfg.blockedSlots.
+  function slotKey(d) {
+    var p = zoneParts(d, TZ);
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    return p.y + "-" + pad(p.mo + 1) + "-" + pad(p.d) + " " + pad(p.h) + ":" + pad(p.mi);
+  }
+
+  function requestsOpen(now) {
+    var h = zoneParts(now || new Date(), TZ).h;
+    return h >= cfg.workHours.start && h < cfg.workHours.end;
+  }
+
   /* ---------- Available days and times ---------- */
 
   function buildDays() {
     var minTime = Date.now() + cfg.minLeadHours * 3600 * 1000;
+    var blocked = cfg.blockedSlots || [];
     var today = zoneParts(new Date(), TZ);
     var startMin = cfg.workHours.start * 60;
     var endMin = cfg.workHours.end * 60;
@@ -85,7 +103,8 @@
       var slots = [];
       for (var m = startMin; m + cfg.slotMinutes <= endMin; m += cfg.slotMinutes) {
         var when = zonedToDate(y, mo, d, Math.floor(m / 60), m % 60, TZ);
-        if (when.getTime() >= minTime) slots.push(when);
+        var key = slotKey(when);
+        if (when.getTime() >= minTime && blocked.indexOf(key) === -1) slots.push(when);
       }
       if (slots.length) days.push({ anchor: zonedToDate(y, mo, d, 12, 0, TZ), slots: slots });
     }
@@ -343,6 +362,10 @@
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (state.submitting) return;
+    if (!paintHours()) {
+      showError("Requests are closed right now. We take them from " + windowText + ".");
+      return;
+    }
 
     var problem = validate();
     if (problem) {
@@ -402,6 +425,20 @@
       .then(function () { setSubmitting(false); });
   });
 
+  /* Closes the form outside the request window, and keeps the note and button in step with the clock. */
+  function paintHours() {
+    var open = requestsOpen(new Date());
+    var closedNote = document.getElementById("closed-note");
+    var submitBtn = document.getElementById("submit-btn");
+    if (closedNote) {
+      closedNote.hidden = open;
+      closedNote.textContent =
+        "Requests are closed right now. We take them from " + windowText + ". You can also message us on TikTok, Instagram, or Discord.";
+    }
+    if (submitBtn) submitBtn.disabled = !open;
+    return open;
+  }
+
   /* ---------- Init ---------- */
 
   renderServices();
@@ -417,7 +454,9 @@
   updateSummary();
 
   document.getElementById("tz-note").textContent =
-    "Times shown in " + cfg.timezoneLabel + " (" + tzAbbr(new Date()) + "). Optional: we confirm the time with you.";
+    "Times shown in " + cfg.timezoneLabel + " (" + tzAbbr(new Date()) + "). We take requests from " + windowText + ". Optional: we confirm the time with you.";
+  paintHours();
+  setInterval(paintHours, 60000);
 
   if (replySelect) {
     replySelect.innerHTML =

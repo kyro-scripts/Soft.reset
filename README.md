@@ -68,11 +68,14 @@ The request form has two behaviours, chosen by `bookingEndpoint` in `config.js`:
 - **`bookingEndpoint` is `""` (current setting):** nothing is saved or sent. The form shows the visitor a ready-to-send message, with a copy button and a button to open the channel they chose. The page says plainly that nothing has been sent yet. Visitors send the message themselves.
 - **`bookingEndpoint` is a URL:** the form sends a JSON `POST` to that URL. It shows "Request received" only if the server replies with a success status. Otherwise it shows "We couldn't send your request" and the message to copy.
 
+The Discord relay in `relay/` is the endpoint this site is built for. Setup is in `relay/README.md`, and it includes replacing the webhook URL that was shared in chat.
+
 If you set an endpoint:
 - Use an API route on your own server, a webhook from Zapier or Make, or a form service.
 - If the endpoint is on another domain, it must allow CORS requests from `softreset.cc`.
-- Update the **Request form** line on `contact.html` (in "How we handle your information") and the note under the form on `book.html`. Both currently say nothing is sent to us by the form.
-- Availability is not checked against your calendar yet. Two people could pick the same hour. Have the endpoint reject taken slots, or check the slot before confirming.
+- The privacy and contact wording already describes the Discord relay. If you use a different endpoint, update the **Request form** line on `contact.html` and the privacy page to match.
+- Availability is not checked against your calendar. After you confirm a booking, add its time to `blockedSlots` in `config.js` (format `"2026-11-17 16:00"`), then push. `workHours` sets the window: currently 3pm to 10pm Central Time, and the form is closed outside it.
+- Blocking a time after payment is not built, because the site has no checkout yet.
 
 The payload looks like this:
 

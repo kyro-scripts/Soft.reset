@@ -1,0 +1,10 @@
+name = "softreset-requests"
+main = "src/worker.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+# Sites allowed to send requests. Add a github.io test address here if you use one.
+ALLOWED_ORIGINS = "https://softreset.cc,https://kyro-scripts.github.io"
+# The two roles to ping. Role IDs are not secret. The webhook URL is (see README.md).
+ROLE_ONE = "1570545579812065412"
+ROLE_TWO = "1570545821777403914"
