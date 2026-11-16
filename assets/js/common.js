@@ -169,7 +169,7 @@
       '<div><p class="footer-h">Message us</p><ul class="footer-links">' + channels + email + "</ul>" +
       '<p class="footer-small"><a href="contact.html#privacy">How we handle your information</a></p></div>' +
       "</div>" +
-      '<p class="fine-print">&copy; ' + new Date().getFullYear() + " " + SR.esc(cfg.brand) + ". All rights reserved.</p>" +
+      '<nav class="footer-legal" aria-label="Legal"><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a><a href="refunds.html">Refunds and returns</a></nav>' + '<p class="fine-print">&copy; ' + new Date().getFullYear() + " " + SR.esc(cfg.brand) + ". All rights reserved.</p>" +
       "</div></footer>"
     );
   }

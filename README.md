@@ -14,6 +14,9 @@ A static site with no build step. Open `index.html` through a local server (see 
 | `contact.html` | TikTok, Instagram, and Discord, what to include, and how we handle information |
 | `book.html` | Request a session: pick one or more services, an optional time, and describe the problem |
 | `products.html` | "Coming soon" until `productsOpen` is `true` in `config.js`, then the physical products with shipping notes |
+| `terms.html` | Terms of Service: what we do, what you approve, what we can't promise, and your responsibilities |
+| `privacy.html` | Privacy Policy: what we collect, how it's used, and what we never ask for |
+| `refunds.html` | Refunds and returns: sessions and, once they're available, products |
 | `landing.html` | Facebook landing page. Not indexed (`noindex`), and excluded from `sitemap.xml` |
 | `assets/js/config.js` | **Edit this.** Services, prices, contact channels, policies, FAQ, products, reviews, booking settings |
 | `assets/js/common.js` | Shared header, footer, and helpers. Edit the navigation or footer links here once |
@@ -120,6 +123,15 @@ Do not add promises about speed, frame rate, certification, years of experience,
 
 ### 9. Facebook landing page
 `landing.html` has the headline, description, and trust line you specified, and a single message button to the contact page. It's `noindex`. Point your Facebook ads at `https://softreset.cc/landing.html`. If you'd rather it be indexed, remove the `robots` meta tag and add it to `sitemap.xml`.
+
+### 10. Legal pages (review before launch)
+`terms.html`, `privacy.html`, and `refunds.html` are linked from every footer. They use the policy wording in `config.js` plus standard terms. They are not legal advice and have not been reviewed by a lawyer. Before launch, confirm:
+- The business name the terms are issued under. The site doesn't name a legal entity.
+- The governing law and where disputes are handled. The terms don't set this yet.
+- The liability limit (capped at what the visitor paid for each service) and the under-18 clause in the terms.
+- The privacy promise that information isn't sold or used for advertising.
+- The privacy page if you change `bookingEndpoint` or turn analytics on. Both pages say so today.
+- The refund and return wording in `config.js` (`refunds`, `productReturns`).
 
 ## Changing the site
 

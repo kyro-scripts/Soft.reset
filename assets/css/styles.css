@@ -1973,6 +1973,72 @@ summary {
   }
 }
 
+/* ---------- Polish pass: booking, contrast, footer legal row, touch targets ---------- */
+
+/* The "Pick a day" placeholder spans the full row instead of one narrow grid column. */
+.time-grid > .muted {
+  grid-column: 1 / -1;
+  margin: 0.25rem 0;
+}
+
+/* Dates scroll sideways and snap to each chip, so the strip reads as scrollable. */
+.date-strip {
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 0.15rem;
+}
+
+.date-strip > .chip {
+  scroll-snap-align: start;
+}
+
+/* Blue text on tinted or warm backgrounds needs the darker blue to pass 4.5:1. */
+.site-nav > a.is-active,
+.nav-services[aria-current="page"] {
+  color: var(--blue-dark);
+}
+
+main .notice-warn a:not(.btn) {
+  color: var(--blue-dark);
+}
+
+/* Short callout notes balance their lines so the last line is never a single word. */
+.service-note,
+.notice p {
+  text-wrap: balance;
+}
+
+/* Legal links sit above the copyright line in the footer. */
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  margin: 2.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.footer-legal a {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.footer-legal a:focus-visible {
+  color: #fff;
+}
+
+.footer-legal + .fine-print {
+  margin-top: 1.25rem;
+}
+
+/* Touch screens get 44px targets for footer links, which are small by default. */
+@media (pointer: coarse) {
+  .footer-links a,
+  .footer-small a,
+  .footer-legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 /* ---------- Accessibility preferences ---------- */
 
 /* Reduced motion: no movement, no springing, no smooth scrolling. Colour and opacity still change, briefly,
